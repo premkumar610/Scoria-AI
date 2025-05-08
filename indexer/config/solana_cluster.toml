@@ -1,0 +1,162 @@
+# SCORIA AI Solana Cluster Configuration
+# --------------------------------------
+# Environment: MainNet Production
+# Security: FIPS 140-3 Level 3, SOC2 Type II, ISO 27001
+
+[network]
+cluster_type = "mainnet-beta"
+entrypoint = "https://api.mainnet-beta.solana.com"
+gossip_port = 8001
+tpu_port = 8003
+rpc_port = 8899
+websocket_port = 8900
+max_connections = 1024
+enable_udp = true
+enable_tpu = true
+enable_rpc = true
+enable_gossip = true
+enable_voting = true
+enable_ledger_cleanup = true
+wal_recovery_mode = "tolerate_corrupted_tail_records"
+
+[validator]
+identity = "/var/solana/validator-keypair.json"
+vote_account = "/var/solana/vote-account-keypair.json"
+authorized_voter = "/var/solana/authorized-voter-keypair.json"
+storage_keypair = "/var/solana/storage-keypair.json"
+ledger_dir = "/mnt/solana/ledger"
+accounts_dir = "/mnt/solana/accounts"
+snapshots_dir = "/mnt/solana/snapshots"
+maximum_snapshots_to_retain = 3
+snapshot_interval_slots = 10000
+full_snapshot_interval_slots = 25000
+incremental_snapshot_interval_slots = 5000
+
+[rpc]
+json_rpc_url = "https://rpc.scoria.ai"
+enable_bigtable_ledger_storage = true
+bigtable_instance = "solana-ledger"
+enable_accounts_db_caching = true
+enable_extended_tx_metadata = true
+enable_rpc_transaction_history = true
+enable_rpc_block_production = true
+enable_rpc_vesting = true
+enable_rpc_rewards = true
+max_multiple_accounts = 100
+max_request_body_size = "10MB"
+max_connection_rate = 100
+max_connections_per_ip = 10
+
+[performance]
+enable_rocksdb_compression = true
+rocksdb_compression_type = "lz4"
+enable_rocksdb_perf_metrics = true
+enable_poh_verify = true
+enable_poh_verify_recent_blockhash = true
+enable_cost_tracker = true
+enable_runtime_metrics = true
+enable_epoch_accounts_hash = true
+enable_epoch_stakes = true
+enable_epoch_info_cache = true
+
+[security]
+tls_cert = "/etc/ssl/certs/solana-fullchain.pem"
+tls_key = "/etc/ssl/private/solana-privkey.pem"
+enable_rpc_firewall = true
+allowed_rpc_ips = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+enable_voting_firewall = true
+allowed_gossip_ips = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+enable_private_rpc = true
+enable_validator_process_isolation = true
+enable_memory_protection = true
+enable_secure_boot = true
+
+[monitoring]
+prometheus_port = 9090
+grafana_port = 3000
+sentry_dsn = "https://sentry.scoria.ai/2"
+enable_stackdriver_metrics = true
+enable_cloudwatch_metrics = true
+enable_new_relic_tracing = true
+enable_datadog_apm = true
+metrics_config = { interval = "5s", retention_time = "30d" }
+
+[backup]
+enable_ledger_archive = true
+archive_dir = "gs://scoria-ledger-archive"
+archive_interval = "1h"
+enable_snapshot_backup = true
+snapshot_backup_dir = "s3://scoria-snapshot-backups"
+enable_validator_state_backup = true
+validator_state_backup_interval = "15m"
+
+[disaster_recovery]
+failover_nodes = [
+    "solana-validator-failover-01.scoria.ai",
+    "solana-validator-failover-02.scoria.ai"
+]
+cold_storage_ledger_dir = "azure://scoria-cold-ledger"
+recovery_time_objective = "15m"
+recovery_point_objective = "5m"
+automated_failover = true
+failover_health_check_interval = "10s"
+
+[maintenance]
+auto_update_channel = "stable"
+auto_restart_interval = "24h"
+enable_ledger_compaction = true
+compaction_interval = "weekly"
+enable_accounts_db_optimization = true
+optimization_schedule = "0 3 * * *"
+enable_obsolete_snapshot_cleanup = true
+
+[consensus]
+tower_storage = "rocksdb"
+tower_path = "/mnt/solana/tower"
+enable_vote_submission = true
+enable_switch_proof_verification = true
+enable_optimistic_confirmation = true
+enable_replay_slot_verification = true
+enable_duplicate_slot_check = true
+
+[storage]
+accounts_hash_cache_path = "/mnt/solana/accounts_hash_cache"
+enable_accounts_db_indexing = true
+accounts_index_type = "secondary_index"
+enable_parallel_ledger_verification = true
+enable_ledger_shred_compression = true
+enable_accounts_db_cache_metrics = true
+
+[gpu_acceleration]
+enable_cuda = true
+cuda_device_count = 4
+enable_opencl = false
+enable_vulkan = false
+enable_tpu = true
+tpu_type = "cloud-tpu-v4"
+
+[compliance]
+enable_chain_audit_log = true
+audit_log_dir = "/var/log/solana/audit"
+enable_regulatory_reporting = true
+reporting_schedule = "0 1 * * 1"  # Weekly Monday 1AM
+enable_gdpr_data_redaction = true
+enable_ccpa_compliance = true
+
+[load_balancing]
+rpc_endpoints = [
+    "https://rpc1.scoria.ai",
+    "https://rpc2.scoria.ai",
+    "https://rpc3.scoria.ai"
+]
+health_check_path = "/health"
+traffic_distribution = "weighted_round_robin"
+geo_routing = true
+
+[logging]
+log_format = "json"
+log_level = "info"
+enable_rotating_logs = true
+max_log_file_size = "100MB"
+log_retention_days = 30
+syslog_endpoint = "udp://logs.scoria.ai:514"
