@@ -1,0 +1,82 @@
+# Target-specific standard library configuration
+[target.sbf-solana-solana]
+# Custom core/std libraries for Solana SBF
+rustflags = [
+    "-C", "link-arg=-znotext",         # Disable text relocation
+    "-C", "link-arg=-Bsymbolic",       # Optimize symbol resolution
+    "-C", "link-arg=--Bdynamic",       # Force dynamic linking
+    "-C", "link-arg=-fno-stack-check", # Disable stack protection
+    "-C", "panic=abort",               # Hardened panic handling
+    "-C", "opt-level=3",               # Maximum optimization
+    "-C", "overflow-checks=on",        # Enable arithmetic checks
+]
+
+# Custom standard library components
+[target.sbf-solana-solana.dependencies]
+# Minimal std implementation for SBF
+std = { path = "solana-sysroot/rust/lib/rustlib/src/rust/library/std" }
+core = { path = "solana-sysroot/rust/lib/rustlib/src/rust/library/core" }
+alloc = { path = "solana-sysroot/rust/lib/rustlib/src/rust/library/alloc" }
+compiler_builtins = { version = "0.1.100", features = ["rustc-dep-of-std"] }
+
+# Custom panic implementation
+panic_unwind = { path = "solana-sysroot/rust/lib/rustlib/src/rust/library/panic_unwind" }
+
+# Platform-specific dependencies
+[target.sbf-solana-solana.dependencies.solana_std]
+git = "https://github.com/solana-labs/rust"
+rev = "v1.16.0"
+features = ["program", "sbf-target"]
+
+# Build profiles
+[profile.dev]
+opt-level = 0
+debug = true
+overflow-checks = true
+debug-assertions = true
+
+[profile.release]
+opt-level = 3
+debug = false
+lto = true
+codegen-units = 1
+panic = "abort"
+incremental = false
+overflow-checks = true
+
+# Custom sysroot configuration
+[build]
+sysroot = "~/.cache/solana/sbf-sysroot"
+target = "sbf-solana-solana"
+rustc = "~/.rustup/toolchains/solana/rustc"
+
+# Standard library override
+[unstable]
+build-std = [
+    "core",
+    "alloc",
+    "std",
+    "proc_macro",
+    "panic_abort"
+]
+build-std-features = [
+    "compiler-builtins-mem",  # Memory intrinsics
+    "panic_immediate_abort"   # Fast panic handling
+]
+
+# Memory allocator configuration
+[allocator]
+default = "wee_alloc"
+features = ["global_allocator"]
+
+[allocator.wee_alloc]
+version = "0.4.5"
+features = ["static_array_backend"]
+
+# Feature flags
+[features]
+default = ["solana-std/program", "overflow-checks"]
+testnet = ["solana-std/testnet", "debug-symbols"]
+mainnet = ["solana-std/mainnet", "optimized-alloc"]
+debug-symbols = []  # Enable debug symbols in release builds
+optimized-alloc = ["wee_alloc/optimized"]
