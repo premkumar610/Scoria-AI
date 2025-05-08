@@ -1,0 +1,80 @@
+{
+  "name": "@scoria/ai-core",
+  "version": "2.8.0",
+  "description": "Decentralized AI Agent Platform on Solana",
+  "license": "BUSL-1.1",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.9.0",
+    "npm": ">=10.1.0"
+  },
+  "scripts": {
+    "build": "NODE_ENV=production webpack --config .webpack/prod.config.js",
+    "build:zk": "circom ./src/zk/circuits/inference.circom --r1cs --wasm --sym -o ./build/zk",
+    "train": "node --experimental-vm-modules ./scripts/train.js --env-file .env.prod",
+    "infer": "node --loader ts-node/esm ./src/engine/inference.ts",
+    "deploy": "solana program deploy ./target/sbf-solana-solana/release/scoria_ai.so --url mainnet-beta",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --passWithNoTests --coverage",
+    "test:security": "snyk test && npm audit --audit-level=critical",
+    "lint": "eslint 'src/**/*.{ts,tsx}' --max-warnings 0",
+    "start": "NODE_ENV=production pm2 start ./ecosystem.config.js --update-env",
+    "benchmark": "k6 run --vus 100 --duration 30s ./tests/load-test.js"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^2.0.0",
+    "@solana/spl-token": "^0.5.0",
+    "@project-serum/anchor": "^0.29.0",
+    "@tensorflow/tfjs-node-gpu": "^4.10.0",
+    "snarkjs": "^0.7.0",
+    "circomlibjs": "^0.2.0",
+    "axios": "^1.5.0",
+    "redis": "^4.6.0",
+    "pg": "^8.11.0",
+    "aes-js": "^3.0.0",
+    "blake3": "^3.0.0",
+    "libsodium-wrappers": "^0.7.13",
+    "onnxruntime-node": "^1.16.0",
+    "level": "^8.0.0",
+    "pino": "^8.15.0",
+    "bullmq": "^5.0.0",
+    "web3.storage": "^11.0.0",
+    "ipfs-http-client": "^60.0.0",
+    "openai": "^4.15.0",
+    "langchain": "^0.0.201"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "typescript": "^5.2.0",
+    "ts-node": "^10.9.0",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "mocha": "^10.2.0",
+    "chai": "^4.3.0",
+    "eslint": "^8.55.0",
+    "prettier": "^3.1.0",
+    "snyk": "^1.1272.0",
+    "k6": "^0.50.0",
+    "pm2": "^5.3.0",
+    "typedoc": "^0.25.0",
+    "solana-test-validator": "^0.29.0",
+    "circom2": "^0.1.0",
+    "node-gyp": "^9.0.0"
+  },
+  "resolutions": {
+    "**/minimist": "^1.2.8",
+    "**/semver": "^7.5.0",
+    "**/yargs-parser": "^21.0.1"
+  },
+  "browserslist": [
+    "last 3 Chrome versions",
+    "last 3 Firefox versions",
+    "node 20"
+  ],
+  "volta": {
+    "node": "20.9.0",
+    "npm": "10.1.0"
+  }
+}
