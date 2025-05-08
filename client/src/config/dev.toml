@@ -1,0 +1,73 @@
+# SCORIA AI Development Configuration
+# -----------------------------------
+# Environment: Local Development (Solana DevNet)
+# Security: Test Keys Only (DO NOT USE IN PRODUCTION)
+
+[environment]
+mode = "dev"                  # dev/test/staging/prod
+log_level = "debug"           # trace/debug/info/warn/error
+enable_hot_reload = true      # Watch for file changes
+fail_fast = false             # Continue on non-critical errors
+clean_on_exit = false         # Purge temporary files on exit
+
+[network]
+solana_rpc = "https://api.devnet.solana.com"
+local_rpc_port = 8899         # Port for local validator
+local_rpc_timeout = 30        # Seconds
+ipfs_gateway = "http://localhost:5001"
+enable_local_testnet = true   # Spin up local Solana validator
+
+[paths]
+model_cache = "./.cache/models"  # Downloaded AI models
+keypair_store = "./.keys"      # Test keypairs (gitignored)
+log_directory = "./logs"       # Structured JSON logs
+snapshots = "./.snapshots"     # Blockchain state snapshots
+
+[dependencies]
+anchor_version = "0.29.0"     # Solana program framework
+solana_sdk = "1.16.12"        # Solana SDK version
+cuda_toolkit = "12.2"         # Minimum CUDA version
+onnxruntime = "1.16.3"        # ONNX runtime binding
+
+[accounts.dev]
+validator = "FxgZ5Qn8W3bK13VzuMMZosGeKzQpsLqgqjmTb5R7FZ3H"  # Local test validator
+faucet = "https://faucet.devnet.solana.com"  # DevNet SOL faucet
+test_user_mnemonic = "test test test test test test test test test test test junk"  # HD wallet seed
+
+[features]
+enable_gpu = true             # CUDA/OpenCL acceleration
+enable_zkp_prover = true      # Local ZK proof generation
+enable_local_inference = true # Run models without chain calls
+enable_debug_apis = true      # Expose /metrics /healthz etc.
+
+[security.dev]
+allow_unsigned = true        # Permit unsigned transactions
+insecure_http = true         # Allow HTTP for local services
+whitelist_origins = ["*"]    # CORS settings (dev only)
+unencrypted_storage = true   # Store test keys in plaintext
+
+[monitoring]
+prometheus_port = 9090       # Metrics endpoint
+grafana_port = 3000          # Dashboard UI
+tracing_endpoint = "http://localhost:4317"  # OpenTelemetry
+
+[scripts]
+pre_build = "yarn generate-types"  # TypeScript type generation
+post_deploy = "./scripts/seed_test_data.sh"  # Initial test data
+test_coverage = "cargo tarpaulin --out Html" # Code coverage
+
+[external_services]
+redis_url = "redis://localhost:6379"  # Caching layer
+postgres_url = "postgres://scoria:test@localhost:5432/scoria_dev"  # Metadata DB
+s3_endpoint = "http://localhost:9000" # MinIO for model storage
+
+[gpu_config]
+max_memory_utilization = 0.8  # GPU VRAM usage cap
+compute_mode = "exclusive"   # exclusive/prohibited/default
+fallback_to_cpu = true       # Use CPU if GPU fails
+enable_tensor_cores = true   # Use FP16/INT8 acceleration
+
+[zkp]
+test_entropy = "00000000000000000000000000000000"  # Deterministic proofs
+mock_provers = true          # Bypass actual ZK computation
+max_constraints = 1000000    # Circuit size limit (dev)
