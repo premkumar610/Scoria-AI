@@ -1,0 +1,147 @@
+# SCORIA AI Database Configuration
+# -----------------------------------
+# Environment: Production (Solana MainNet Integrated)
+# Security: PCI-DSS Level 1, SOC2 Type II, GDPR Compliant
+
+[connection]
+host = "db.scoria.ai"
+port = 5432
+user = "scoria_prod"
+password = "@env DB_PASSWORD"  # KMS-encrypted secret
+dbname = "scoria_mainnet"
+application_name = "scoria_engine_v2.8"
+sslmode = "verify-full"
+
+[connection_pool]
+max_size = 100
+min_idle = 10
+connect_timeout = "10s"
+idle_timeout = "5m"
+max_lifetime = "30m"
+test_on_checkout = true
+
+[replication]
+primary = "db-scoria-01.aws-region.rds.amazonaws.com"
+replicas = [
+    "db-scoria-02.aws-region.rds.amazonaws.com",
+    "db-scoria-03.aws-region.rds.amazonaws.com",
+]
+read_only_endpoint = "ro.scoria-db.cluster.aws-region.rds.amazonaws.com"
+sync_commit = "remote_apply"
+wal_sender_timeout = "60s"
+
+[ssl]
+cert = "/etc/scoria/ssl/rds-combined-ca-bundle.pem"
+key = "/etc/scoria/ssl/client-key.pem"
+root_cert = "/etc/scoria/ssl/rds-ca-root.pem"
+crl = "/etc/scoria/ssl/crl.pem"
+prefer_server_ciphers = true
+
+[backup]
+continuous_archiving = true
+wal_keep_size = "16GB"
+basebackup_interval = "1h"
+backup_window = "00:00-02:00 UTC"
+retention_policy = "7d full, 30d differential, 1y incremental"
+storage_url = "s3://scoria-db-backups?region=aws-region"
+
+[partitioning]
+timescale_enabled = true
+hypertables = [
+    { name = "model_metrics", partition_interval = "7 days" },
+    { name = "inference_logs", partition_interval = "1 day" },
+]
+compression_policy = {
+    "model_metrics" = { after = "30 days", segment_by = "model_id" },
+    "audit_logs" = { after = "7 days" }
+}
+
+[query_tuning]
+work_mem = "64MB"
+shared_buffers = "12GB"
+effective_cache_size = "36GB"
+maintenance_work_mem = "2GB"
+random_page_cost = 1.1
+parallel_workers = 8
+
+[indexing]
+btree_gin_enabled = true
+search_path = ["scoria_schema", "public"]
+concurrent_reindex = true
+index_cleanup_interval = "24h"
+
+[monitoring]
+pg_stat_statements = true
+track_io_timing = true
+log_statement = "ddl"
+log_min_duration_statement = "100ms"
+deadlock_timeout = "1s"
+
+[compliance]
+audit_log = { enabled = true, retention = "365 days" }
+data_retention = {
+    "inference_logs" = "30 days",
+    "user_data" = "6 months",
+    "model_versions" = "5 years"
+}
+row_level_security = {
+    "user_data" = "tenant_id = current_tenant()",
+    "model_access" = "org_id IN (SELECT org_id FROM user_orgs WHERE user_id = current_user_id())"
+}
+
+[maintenance]
+vacuum = { scale_factor = 0.5, index_cleanup = "on" }
+analyze = { threshold = 0.1, verbose = true }
+auto_explain = { sample_rate = 0.01, log_min_duration = "100ms" }
+
+[extensions]
+pgcrypto = { version = "1.3" }
+timescaledb = { license = "apache" }
+pg_partman = { retention = "auto" }
+pg_stat_monitor = { bucket_duration = "1 minute" }
+
+[high_availability]
+failover = { method = "automatic", max_replica_lag = "1MB" }
+connection_failover = {
+    hosts = [
+        { host = "primary-db", port = 5432 },
+        { host = "replica1-db", port = 5433 }
+    ],
+    ttl = "60s"
+}
+pool_mode = "transaction"
+target_session_attrs = "read-write"
+
+[performance]
+prepared_statements = { cache_size = 1000, statement_timeout = "30s" }
+batch_operations = { max_size = 1000, timeout = "10s" }
+pipeline_mode = "transaction"
+jdbc_metrics = { enabled = true, registry = "prometheus" }
+
+[security]
+password_encryption = "scram-sha-256"
+ssl_dh_params = "/etc/scoria/ssl/dhparams.pem"
+ssl_ciphers = "TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256"
+client_verification = {
+    cert = "/etc/scoria/ssl/client.crt",
+    key = "/etc/scoria/ssl/client.key"
+}
+column_encryption = {
+    master_key = "kms+aws://scoria-key",
+    key_rotation = "30 days"
+}
+
+[backup_restore]
+point_in_time_recovery = { window = "35 days" }
+logical_backups = { schedule = "0 2 * * *", format = "directory" }
+physical_backups = { storage_account = "azure://scoria-backups", frequency = "daily" }
+
+[diagnostics]
+query_plan_analysis = { enabled = true, threshold = "500ms" }
+lock_monitoring = { sampling_interval = "5s" }
+wait_event_sampling = { rate = 0.1 }
+
+[advanced]
+jit = { enabled = true, cost_threshold = 100000 }
+plan_cache_mode = "force_custom_plan"
+geqo = { threshold = 14, seed = 0.5 }
