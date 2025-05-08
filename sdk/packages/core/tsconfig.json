@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    /* Core TypeScript Configuration */
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022", "DOM", "WebWorker", "ESNext.WeakRef"],
+    "types": ["node", "jest", "web3"],
+
+    /* Strictness Settings */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "useUnknownInCatchVariables": true,
+
+    /* Module Handling */
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowUmdGlobalAccess": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Source Maps & Declaration */
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "declarationDir": "./types",
+
+    /* Path Aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@solana/*": ["./node_modules/@solana/*"],
+      "@scoria/*": ["./src/*"],
+      "zk/*": ["./circuits/*"]
+    },
+
+    /* Advanced Optimization */
+    "incremental": true,
+    "composite": true,
+    "tsBuildInfoFile": "./build/.tsbuildinfo",
+    "removeComments": false,
+    "noEmitOnError": true,
+
+    /* WebAssembly Support */
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": true,
+
+    /* Node.js Compatibility */
+    "typeRoots": [
+      "./node_modules/@types",
+      "./types"
+    ],
+    "allowJs": false,
+    "checkJs": false,
+    "maxNodeModuleJsDepth": 0
+  },
+  "include": [
+    "src/**/*.ts",
+    "tests/**/*.ts",
+    "scripts/**/*.ts",
+    "config/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/__mocks__/*"
+  ],
+  "references": [
+    {"path": "./contracts/tsconfig.json"},
+    {"path": "./local_engine/tsconfig.json"}
+  ]
+}
