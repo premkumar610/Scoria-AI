@@ -1,0 +1,148 @@
+scoria-ai/
+│
+├── contracts/                      # Solana Smart Contracts
+│   ├── Cargo.toml
+│   ├── Anchor.toml
+│   ├── programs/
+│   │   ├── model_registry/
+│   │   │   ├── Cargo.toml
+│   │   │   ├── Xargo.toml          # Cross-compilation config
+│   │   │   ├── src/
+│   │   │   │   ├── lib.rs          # Program entry
+│   │   │   │   ├── instructions/   # Instruction handlers
+│   │   │   │   │   ├── register.rs # Model registration
+│   │   │   │   │   ├── update.rs   # Version control
+│   │   │   │   │   └── delete.rs   # Model removal
+│   │   │   │   ├── state/
+│   │   │   │   │   ├── model.rs    # On-chain model state
+│   │   │   │   │   └── version.rs  # Metadata schema
+│   │   │   │   ├── error.rs        # Custom errors
+│   │   │   │   └── utils.rs        # Hash utilities
+│   │   ├── inference_engine/       # AI processing core
+│   │   │   └── ... 
+│   ├── migrations/
+│   │   ├── 20240101000000_init.sql
+│   │   └── 20240201000000_add_indexes.sql
+│   └── scripts/
+│       ├── deploy_mainnet.sh
+│       └── verify_bytecode.sh
+
+├── client/                         # Local Execution Engine
+│   ├── Cargo.toml
+│   ├── .cargo/config.toml          # Cross-platform build
+│   ├── src/
+│   │   ├── main.rs                 # CLI entry
+│   │   ├── core/
+│   │   │   ├── model_loader/
+│   │   │   │   ├── aes.rs          # AES-256-GCM
+│   │   │   │   └── integrity.rs     # BLAKE3 checks
+│   │   │   ├── inference/
+│   │   │   │   ├── onnx.rs         # ONNX binding
+│   │   │   │   └── tensorrt.rs     # TensorRT optim
+│   │   │   ├── zkp/                # Privacy modules
+│   │   │   │   ├── circuits/       # ZK circuits
+│   │   │   │   │   ├── inference_validator.circom
+│   │   │   │   │   └── privacy_swap.circom
+│   │   │   │   └── prover.rs       # Proof generation
+│   │   │   └── cache/
+│   │   │       ├── lru.rs          # Cache policy
+│   │   │       └── redis.rs        # Connection pool
+│   │   ├── hardware/
+│   │   │   ├── cuda/
+│   │   │   │   ├── matrix_ops.cu   # CUDA kernels
+│   │   │   │   └── ffi.rs          # Rust bindings
+│   │   │   └── opencl/
+│   │   │       └── kernels.cl      # OpenCL code
+│   │   └── config/
+│   │       ├── dev.toml
+│   │       └── prod.toml
+│   ├── tests/
+│   │   ├── model_loader_tests.rs
+│   │   └── zkp_tests/
+│   │       └── prover_tests.rs
+
+├── sdk/                            # Web3 Integration
+│   ├── packages/
+│   │   ├── core/
+│   │   │   ├── package.json
+│   │   │   ├── tsconfig.json
+│   │   │   ├── src/
+│   │   │   │   ├── client.ts       # HTTP client
+│   │   │   │   ├── types.ts        # Interface defs
+│   │   │   │   └── utils/
+│   │   │   │       ├── crypto.ts   # Browser crypto
+│   │   │   │       └── solana.ts   # Wallet adapter
+│   │   ├── defi-plugin/            # DeFi integration
+│   │   │   ├── src/
+│   │   │   │   └── analytics.ts    # Data analysis
+│   │   │   └── test/
+│   │   │       └── analytics.test.ts
+│   ├── webpack/
+│   │   ├── webpack.config.prod.js
+│   │   └── webpack.config.dev.js
+│   └── examples/
+│       └── basic_usage.ts
+
+├── indexer/                        # Blockchain Processor
+│   ├── Cargo.toml
+│   ├── src/
+│   │   ├── main.rs                 # Async runtime
+│   │   ├── solana_listener.rs      # Event listener
+│   │   ├── model_updater.rs        # FL logic
+│   │   └── database/
+│   │       ├── postgres.rs         # Connection pool
+│   │       └── migrations.rs       # Schema migrations
+│   ├── config/
+│   │   ├── database.toml
+│   │   └── solana_cluster.toml
+│   └── scripts/
+│       └── start_indexer.sh
+
+├── oracles/                        # External Data
+│   ├── chainlink/
+│   │   ├── contracts/
+│   │   │   └── Adapter.sol         # Oracle contract
+│   │   ├── scripts/
+│   │   │   ├── deploy.js
+│   │   │   └── verify.js
+│   │   └── test/
+│   │       └── Adapter.test.js
+│   └── pyth/
+│       └── ... 
+
+├── governance/                     # DAO Management
+│   ├── proposal_contract/
+│   │   ├── programs/
+│   │   │   └── dao/
+│   │   │       ├── src/
+│   │   │       │   └── vote.rs     # Voting logic
+│   │   │       └── tests/
+│   │   │           └── vote_tests.rs
+│   └── interface/
+│       └── IDaoGovernance.ts       # TypeChain interface
+
+├── tests/                          # Quality Assurance
+│   ├── load_test/
+│   │   ├── locustfile.py           # Load testing
+│   │   └── report_template.html    # HTML template
+│   ├── security/
+│   │   ├── audit_checklist.md      # 100+ checks
+│   │   └── slither_config.json     # Static analysis
+│   └── unit/
+│       └── model_registry_tests/
+
+├── docs/                           # Documentation
+│   ├── ARCHITECTURE.md            # System design
+│   ├── API_REFERENCE.md           # REST/SDK docs
+│   └── CONTRIBUTING.md            # Dev guide
+
+├── .github/                        # CI/CD
+│   ├── workflows/
+│   │   ├── ci.yml                 # Integration
+│   │   ├── release.yml            # Release pipeline
+│   │   └── security_scan.yml      # Security checks
+│   └── dependabot.yml             # Dependency updates
+
+├── Dockerfile                     # Multi-stage build
+├── docker-compose.yaml           # Local services
+└── Makefile                      # Build commands
