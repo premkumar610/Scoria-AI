@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCORIA AI Performance Report - {{timestamp}}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body class="bg-slate-900 text-gray-100">
+    <!-- Security Header -->
+    <div class="border-b border-emerald-500 p-4 bg-black/50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <img src="data:image/svg+xml;base64,PHN2Zy...==" 
+                 class="h-12 w-12"
+                 alt="SCORIA AI Logo"
+                 id="secure-logo">
+            <div class="space-y-1 text-right">
+                <p class="text-xs font-mono opacity-75">
+                    Report ID: <span id="report-id">{{report_hash}}</span>
+                </p>
+                <p class="text-xs font-mono opacity-75">
+                    Valid Until: <time id="expiry">{{expiry_time}}</time>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+        <!-- Executive Summary -->
+        <section class="space-y-6">
+            <h2 class="text-3xl font-bold text-emerald-400 border-b border-emerald-500 pb-2">
+                Executive Summary
+            </h2>
+            
+            <!-- KPI Cards -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-sm opacity-75 mb-2">Blockchain TPS</p>
+                    <p class="text-4xl font-bold text-emerald-400" id="tps">
+                        {{blockchain_metrics.tps}}
+                    </p>
+                    <div class="mt-4 space-y-1 text-xs">
+                        <div class="flex justify-between">
+                            <span>Success:</span>
+                            <span class="font-mono">{{blockchain_metrics.success_rate}}%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Latency (p95):</span>
+                            <span class="font-mono">{{blockchain_metrics.latency_p95}}ms</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-sm opacity-75 mb-2">AI Inference</p>
+                    <p class="text-4xl font-bold text-purple-400" id="inf-speed">
+                        {{ai_metrics.inference_speed}}ms
+                    </p>
+                    <div class="mt-4 space-y-1 text-xs">
+                        <div class="flex justify-between">
+                            <span>GPU Utilization:</span>
+                            <span class="font-mono">{{ai_metrics.gpu_util}}%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Model Accuracy:</span>
+                            <span class="font-mono">{{ai_metrics.accuracy}}%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-sm opacity-75 mb-2">Privacy Ops</p>
+                    <p class="text-4xl font-bold text-cyan-400" id="zkp-time">
+                        {{privacy_metrics.zkp_generation}}s
+                    </p>
+                    <div class="mt-4 space-y-1 text-xs">
+                        <div class="flex justify-between">
+                            <span>Encryption Success:</span>
+                            <span class="font-mono">{{privacy_metrics.enc_success}}%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Data Anonymized:</span>
+                            <span class="font-mono">{{privacy_metrics.anon_coverage}}%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Metrics -->
+        <section class="space-y-6">
+            <h2 class="text-3xl font-bold text-emerald-400 border-b border-emerald-500 pb-2">
+                Performance Analysis
+            </h2>
+
+            <!-- Blockchain Charts -->
+            <div class="grid lg:grid-cols-2 gap-6">
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <div id="tps-chart" class="h-64"></div>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <div id="latency-distribution" class="h-64"></div>
+                </div>
+            </div>
+
+            <!-- AI Inference Metrics -->
+            <div class="grid lg:grid-cols-2 gap-6">
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <div id="gpu-metrics" class="h-64"></div>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <div id="model-accuracy" class="h-64"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Compliance Section -->
+        <section class="space-y-6">
+            <h2 class="text-3xl font-bold text-emerald-400 border-b border-emerald-500 pb-2">
+                Security & Compliance
+            </h2>
+
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <div class="grid md:grid-cols-3 gap-6 text-center">
+                    <div class="p-4 border-r border-slate-700">
+                        <p class="text-sm opacity-75 mb-2">GDPR Compliance</p>
+                        <span class="text-emerald-400 text-2xl font-bold">
+                            {{compliance.gdpr_score}}/100
+                        </span>
+                    </div>
+                    <div class="p-4 border-r border-slate-700">
+                        <p class="text-sm opacity-75 mb-2">SOC2 Controls</p>
+                        <span class="text-emerald-400 text-2xl font-bold">
+                            {{compliance.soc2_passed}}/{{compliance.soc2_total}}
+                        </span>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm opacity-75 mb-2">PCI-DSS Audit</p>
+                        <span class="text-emerald-400 text-2xl font-bold">
+                            {{compliance.pci_status}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Appendix -->
+        <section class="space-y-6">
+            <h2 class="text-3xl font-bold text-emerald-400 border-b border-emerald-500 pb-2">
+                Technical Appendix
+            </h2>
+
+            <!-- Configuration Details -->
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="text-sm font-bold opacity-75 mb-2">Test Configuration</h3>
+                        <pre class="text-xs font-mono p-4 bg-slate-900 rounded-lg overflow-x-auto">{{test_config}}</pre>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold opacity-75 mb-2">Environment Details</h3>
+                        <pre class="text-xs font-mono p-4 bg-slate-900 rounded-lg overflow-x-auto">{{environment_info}}</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Security Watermark -->
+    <div class="fixed bottom-4 right-4 opacity-25 text-xs font-mono">
+        {{security_watermark}}
+    </div>
+
+    <!-- Data Initialization -->
+    <script>
+        const reportData = {
+            blockchain: {{blockchain_metrics|tojson}},
+            ai: {{ai_metrics|tojson}},
+            privacy: {{privacy_metrics|tojson}},
+            charts: {{chart_data|tojson}}
+        };
+
+        // Initialize security features
+        document.getElementById('secure-logo').setAttribute(
+            'src', 
+            `data:image/svg+xml;base64,${CryptoJS.MD5('{{report_hash}}')}`
+        );
+    </script>
+
+    <!-- Chart Initialization -->
+    <script>
+        // Blockchain TPS Timeline
+        new ApexCharts(document.querySelector("#tps-chart"), {
+            series: [{
+                name: "Transactions/s",
+                data: reportData.charts.tps_series
+            }],
+            chart: { type: 'area', height: '100%', toolbar: { show: false } },
+            colors: ['#34d399'],
+            xaxis: { type: 'datetime' },
+            yaxis: { title: { text: 'TPS' } }
+        }).render();
+
+        // Latency Distribution
+        new ApexCharts(document.querySelector("#latency-distribution"), {
+            series: reportData.charts.latency_distribution,
+            chart: { type: 'radar', height: '100%' },
+            xaxis: { categories: ['p50', 'p75', 'p90', 'p95', 'p99'] },
+            colors: ['#22d3ee']
+        }).render();
+
+        // GPU Utilization
+        new ApexCharts(document.querySelector("#gpu-metrics"), {
+            series: [{
+                name: "GPU Utilization",
+                data: reportData.charts.gpu_utilization
+            }],
+            chart: { type: 'line', height: '100%', toolbar: { show: false } },
+            colors: ['#818cf8'],
+            stroke: { curve: 'smooth' },
+            xaxis: { type: 'datetime' }
+        }).render();
+    </script>
+</body>
+</html>
