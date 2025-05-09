@@ -1,0 +1,113 @@
+{
+    "detectors": {
+        "exclude": [
+            "naming-convention",
+            "external-function",
+            "low-level-calls",
+            "constable-states",
+            "erc20-interface",
+            "erc721-interface",
+            "locked-ether",
+            "reentrancy-eth",
+            "timestamp",
+            "assembly"
+        ],
+        "enable": [
+            "reentrancy-no-eth",
+            "arbitrary-send",
+            "controlled-delegatecall",
+            "unchecked-transfer",
+            "suicidal",
+            "uninitialized-state",
+            "unused-return",
+            "shadowing-state",
+            "weak-prng",
+            "tx-origin",
+            "incorrect-equality",
+            "incorrect-modifier",
+            "void-cst",
+            "calls-loop",
+            "reentrancy-benign",
+            "reentrancy-events",
+            "reentrancy-unlimited-gas",
+            "variable-scope",
+            "events-access",
+            "events-maths",
+            "missing-inheritance",
+            "signature-replay",
+            "msg-value-loop",
+            "incorrect-base-ctor",
+            "protected-vars",
+            "solc-version",
+            "pragma",
+            "deprecated-standards",
+            "erc20-indexed",
+            "erc721-approve",
+            "rtlo",
+            "shadowing-builtin",
+            "constable-states",
+            "immutable-states",
+            "state-visibility",
+            "boolean-cst",
+            "divide-before-multiply",
+            "uninitialized-local",
+            "unused-state",
+            "unused-event",
+            "unused-return-emit",
+            "unused-return-external",
+            "unused-return-internal"
+        ]
+    },
+    "exclude_directories": [
+        "test/",
+        "mock/",
+        "lib/",
+        "node_modules/"
+    ],
+    "exclude_files": [
+        "Initializable.sol",
+        "UpgradeableProxy.sol"
+    ],
+    "filter_paths": [
+        "contracts/core/**",
+        "contracts/governance/**",
+        "contracts/oracles/**"
+    ],
+    "checklist": true,
+    "json": "slither-report.json",
+    "fail-pedantic": true,
+    "fail-high": true,
+    "fail-medium": true,
+    "severity": [
+        "high",
+        "medium"
+    ],
+    "solc_remaps": [
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "@chainlink/=node_modules/@chainlink/"
+    ],
+    "solc_solcs_set": "0.8.21",
+    "solc_force_legacy_json": true,
+    "disable_color": true,
+    "legacy_ast": false,
+    "triage": {
+        "ignore": [
+            {
+                "file": "contracts/Adapter.sol",
+                "rule": "reentrancy-no-eth",
+                "comment": "Controlled delegate pattern for oracle updates"
+            },
+            {
+                "file": "contracts/FLGovernance.sol",
+                "rule": "timestamp",
+                "comment": "Block.timestamp used for model versioning consensus"
+            }
+        ]
+    },
+    "exclude_informational": true,
+    "exclude-low": true,
+    "exclude-optimization": true,
+    "exclude-external": true,
+    "hardhat_ignore": true,
+    "foundry_ignore": true
+}
