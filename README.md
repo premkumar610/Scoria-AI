@@ -1,227 +1,134 @@
-# SCORIA AI - Decentralized AI Agent Framework on Solana
+# Scoria AI: Decentralized AI Agent Framework on Blockchain 🌐🤖
 
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Solana Version](https://img.shields.io/badge/Solana-1.14.7-purple)](https://solana.com)
+![Scoria AI](https://img.shields.io/badge/Scoria%20AI-v1.0.0-blue.svg) ![Releases](https://img.shields.io/badge/Releases-latest-brightgreen.svg) ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-**Enterprise-grade decentralized AI infrastructure enabling privacy-preserving model execution with blockchain-verified integrity.** 
+Welcome to the **Scoria AI** repository! This project focuses on building a decentralized AI agent framework that operates on the blockchain. Our aim is to enable private, on-device Web3 intelligence for both users and enterprises. With Scoria AI, we are paving the way for secure and efficient AI solutions that respect user privacy and data integrity.
 
+## Table of Contents
 
-[![Website](https://img.shields.io/badge/Website-scoriaai.com-000000?logo=google-chrome&style=flat&logoColor=white)](https://scoriaai.com/)
-[![Twitter](https://img.shields.io/badge/Twitter-%40SCORIAFIVE-1DA1F2?logo=twitter&style=flat&logoColor=white)](https://x.com/SCORIAFIVE)
-[![Twitter](https://img.shields.io/badge/Twitter-%40AWNystromus-1DA1F2?logo=twitter&style=flat&logoColor=white)](https://x.com/AWNystromus)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-andrewnystrom-0077B5?logo=linkedin&style=flat&logoColor=white)](https://www.linkedin.com/in/andrewnystrom/)
+- [Introduction](#introduction)
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+- [Releases](#releases)
 
+## Introduction
 
+Scoria AI leverages blockchain technology to provide a decentralized platform for artificial intelligence agents. By using a combination of federated learning, zero-knowledge proofs, and on-chain processing, Scoria AI ensures that data remains private and secure. Our framework supports various programming languages and technologies, making it adaptable for different use cases.
 
-## 🚀 Core Features
+## Features
 
-### AI/ML Infrastructure
-- **Local Model Serving**: ONNX/TensorRT runtime with GPU acceleration
-- **Federated Learning**: Secure model aggregation (Paillier HE + ZKP)
-- **Model Marketplace**: NFT-based model distribution
-- **Privacy Swaps**: P2P data exchange with zk-SNARKs
+- **Decentralization**: Operate without a central authority.
+- **Privacy**: Keep user data secure with on-device processing.
+- **Interoperability**: Compatible with multiple blockchain networks, including Solana.
+- **Scalability**: Efficiently handle a growing number of users and transactions.
+- **Support for AI Models**: Integrate with ONNX and TensorRT for seamless AI model deployment.
+- **Flexible Language Support**: Built with Rust and TypeScript for enhanced performance and usability.
+- **Smart Contracts**: Utilize DAO and DeFi functionalities for governance and financial operations.
+- **Secure Inference**: Ensure that AI inferences are conducted securely using advanced cryptographic techniques.
 
-### Blockchain Integration
-- **Solana Program**: On-chain model registry & inference verification
-- **Chainlink Adapter**: Trustless oracle for real-world data
-- **DAO Governance**: Reputation-weighted voting system
-- **Proof of Compute**: GPU-based consensus mechanism
+## Getting Started
 
-### Enterprise Security
-- **Confidential Execution**: SGX/TEE support
-- **Compliance Ready**: GDPR/SOC2 audit trails
-- **Zero-Knowledge ML**: zkCNN/zkRNN proof systems
-- **Runtime Integrity**: BLAKE3 + Ed25519 signatures
-
-## 🌐 Architecture
-```mermaid
-graph TD
-    %% User Layer
-    A[User Client] -->|Submit Task| B{SCORIA Program}
-    A -->|Query Models| D[[Model Registry]]
-    A -->|Verify Proofs| J[Proof Explorer]
-    
-    %% Blockchain Layer
-    subgraph Solana MainNet
-        B -->|Record State| C[(State Accounts)]
-        C -->|Model Metadata| D
-        B -->|Verify Proof| E[ZK Verifier]
-        E --> F[Proof Ledger]
-    end
-    
-    %% AI Execution Layer
-    subgraph Local Engine
-        D --> G[Model Loader]
-        G --> H[Secure Enclave]
-        H -->|GPU Acceleration| I[TensorRT/ONNX Runtime]
-        I -->|Generate Proofs| E
-    end
-    
-    %% Privacy Layer
-    subgraph Privacy Network
-        K[Federated Nodes] -->|Secure Aggregation| L[[Global Model]]
-        L -->|Encrypted Updates| M[HE Vault]
-        M -->|Threshold Decrypt| G
-    end
-    
-    %% Infrastructure Layer
-    subgraph Backend Services
-        N[(PostgreSQL)] --> O[Analytics API]
-        P[(Redis Cache)] --> Q[Session Manager]
-        R[Kafka Streams] --> S[Event Processor]
-    end
-    
-    %% Monitoring
-    subgraph Observability
-        T[Prometheus] --> U[Grafana Dashboard]
-        V[ELK Stack] --> W[Audit Trail]
-        X[Health Check] --> Y[Auto-Scaling]
-    end
-    
-    %% Tooling
-    subgraph Dev Tools
-        Z[Anchor CLI] --> B
-        AA[ONNX Toolkit] --> G
-        AB[Circuit Compiler] --> E
-    end
-    
-    %% External Adapters
-    CC[[Chainlink Oracle]] --> B
-    DD[[IPFS Storage]] --> D
-    EE[[Wormhole Bridge]] --> K
-    
-    style A fill:#4b9be1,color:white
-    style B fill:#666699,color:white
-    style D fill:#ff9966
-    style E fill:#99cc00
-    style H fill:#c71585
-    style L fill:#20b2aa
-    style CC fill:#375bd2
-    style EE fill:#8a2be2
-          
-
-```
-
-## 🧩 Tech Stack
-
-| Layer               | Components                                                                 |
-|----------------------|---------------------------------------------------------------------------|
-| **Blockchain**       | Solana CLI 1.14, Anchor Framework, Wormhole Bridge                       |
-| **AI Runtime**       | ONNX Runtime 1.15, TensorRT 8.6, CUDA 12.2                               |
-| **Privacy**          | Circom 2.1.5, Halo2, SEAL (Microsoft HE)                                |
-| **Infrastructure**   | Redis 7.0, PostgreSQL 15, Kafka 3.4                                     |
-| **Monitoring**       | Prometheus 2.45, Grafana 10.1, ELK Stack 8.9                           |
-
-## 🛠️ Installation
+To get started with Scoria AI, you will need to set up your development environment. This section will guide you through the initial steps.
 
 ### Prerequisites
-- Rust 1.72+ (nightly)
-- Solana CLI 1.14.7
-- Node.js 18.16+ 
-- CUDA Toolkit 12.2
-- PostgreSQL 15
+
+- Node.js (version 14 or later)
+- Rust (latest stable version)
+- Docker (optional, for containerized deployments)
+- Access to a Solana wallet (for blockchain interactions)
+
+### Installation
+
+Clone the repository to your local machine:
 
 ```bash
-# 1. Clone repository
-git clone --recurse-submodules https://github.com/yourorg/scoria-ai.git
-
-# 2. Install core dependencies
-./scripts/install_deps.sh --with-gpu --with-chainlink
-
-# 3. Configure environment
-cp .env.example .env
-# Edit .env with your Solana RPC endpoints and DB credentials
-
-# 4. Build all components
-make all
-
-# 5. Run verification tests
-make test-e2e
+git clone https://github.com/premkumar610/Scoria-AI.git
+cd Scoria-AI
 ```
 
-## 🧠 Usage Examples
+Install the required dependencies:
 
-### Start Local Inference Node
-```
-# With GPU acceleration
-scoria-node start \
-  --model-repo ./models \
-  --gpu 0 \
-  --privacy-level enterprise
+```bash
+npm install
 ```
 
-### Submit Inference Task
-```
-import { ScoriaClient } from '@scoria/client';
+If you want to run the project in a Docker container, use the following command:
 
-const client = new ScoriaClient({
-  cluster: 'mainnet-beta',
-  wallet: new AnchorWallet(signer)
-});
-
-const result = await client.submitInferenceTask({
-  model: 'resnet50-v2.1',
-  inputs: tensorData,
-  zkParams: {
-    proofSystem: 'halo2',
-    visibility: 'private'
-  }
-});
+```bash
+docker-compose up --build
 ```
 
-### Participate in Federated Learning
-```
-// Submit local model update
-let update = ModelUpdate::new(
-    local_model,
-    ZkProof::generate(
-        training_data_stats,
-        ComplianceProof::gdpr_compliant()
-    )
-);
+### Configuration
 
-let tx = client.build_fl_update_transaction(update);
-tx.sign(&wallet).await?;
+Before running the application, you may need to configure your environment variables. Create a `.env` file in the root directory and set the following variables:
+
+```env
+BLOCKCHAIN_NETWORK=solana
+WALLET_ADDRESS=your_wallet_address
+AI_MODEL_PATH=/path/to/your/model.onnx
 ```
 
+## Usage
 
-## 🔒 Security & Compliance
+Once you have everything set up, you can start using Scoria AI. Here’s how to run the application:
 
-### Audited Components
+```bash
+npm start
+```
 
-- Cryptography: FIPS 140-3 Level 2 certified modules
-- Smart Contracts: Certora formal verification
-- Data Pipeline: GDPR Article 32 encryption
+### Interacting with the Framework
 
-### Compliance Standards
+You can interact with Scoria AI through the API. Here are some common endpoints:
 
-- SOC2 Type II (AI Inference Pipeline)
-- ISO 27001 (Model Serving Infrastructure)
-- HIPAA (Medical Use Cases)
+- **POST /api/agents**: Create a new AI agent.
+- **GET /api/agents/{id}**: Retrieve the details of an AI agent.
+- **POST /api/inference**: Perform inference using a specified AI model.
 
+### Example Request
 
-## 📈 Performance
+Here’s an example of how to create a new AI agent:
 
-| Metric | Value (A100 80GB) |
-|--------|--------|
-| Inference Throughput | 12,500 TPS |
-| Proof Generation Time | 850 ms |
-| Model Load Latency | 120 ms |
-| Privacy Swap Bandwidth | 9.2 Gbps |
+```bash
+curl -X POST http://localhost:3000/api/agents -H "Content-Type: application/json" -d '{
+  "name": "MyAgent",
+  "model": "model.onnx"
+}'
+```
 
-## 🤝 Contributing
+## Contributing
 
-- Fork the repository
-- Create feature branch (git checkout -b feature/amazing)
-- Commit changes (git commit -m 'Add amazing feature')
-- Push to branch (git push origin feature/amazing)
-- Open Pull Request
+We welcome contributions to Scoria AI! If you want to contribute, please follow these steps:
 
-### Development Guidelines:
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/YourFeature`).
+3. Make your changes and commit them (`git commit -m 'Add new feature'`).
+4. Push to the branch (`git push origin feature/YourFeature`).
+5. Open a pull request.
 
-- 100% test coverage for core components
-- Zero unsafe code outside crypto modules
-- Strict Clippy linter rules
+Please make sure to follow the coding standards and add tests for any new features.
 
-## 📜 License
-### AGPL-3.0 License - See LICENSE for details.
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For any inquiries or feedback, feel free to reach out:
+
+- Email: support@scoria-ai.com
+- Twitter: [@ScoriaAI](https://twitter.com/ScoriaAI)
+
+## Releases
+
+To download the latest release, visit the [Releases section](https://github.com/premkumar610/Scoria-AI/releases). Make sure to download the appropriate file for your platform and execute it as needed.
+
+You can also check the [Releases section](https://github.com/premkumar610/Scoria-AI/releases) for previous versions and updates.
+
+## Conclusion
+
+Thank you for exploring Scoria AI! We believe that decentralized AI can transform industries by providing secure, private, and efficient solutions. Join us on this journey to revolutionize artificial intelligence on the blockchain.
